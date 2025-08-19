@@ -17,7 +17,6 @@ const questionsArray = [
 ];
 
 let currentIndex = 0;
-window.onload = function() {
   const imageEl = document.getElementById('card-image');
   const questionEl = document.getElementById('card-question');
   const nextBtn = document.getElementById('next-btn');
@@ -31,7 +30,7 @@ window.onload = function() {
       }
     }
     return -1; // All chosen
-  }
+
 
   function renderCard(index) {
     if (index === -1) {
