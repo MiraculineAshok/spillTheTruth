@@ -1,0 +1,14 @@
+[
+  {
+    "imageUrl": "https://example.com/image1.jpg",
+    "question": "What is your favorite color?"
+  },
+  {
+    "imageUrl": "https://example.com/image2.jpg",
+    "question": "Do you like coffee or tea?"
+  },
+  {
+    "imageUrl": "https://example.com/image3.jpg",
+    "question": "Have you ever traveled abroad?"
+  }
+]
