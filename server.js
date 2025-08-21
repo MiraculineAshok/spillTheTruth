@@ -12,13 +12,18 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// API endpoint to get questions
+// API endpoint to get questions (default to spill_the_truth full list)
 app.get('/api/questions', (req, res) => {
-  fs.readFile(path.join(__dirname, 'questions.json'), 'utf8', (err, data) => {
+  const filePath = path.join(__dirname, 'questions_spill_the_truth.json');
+  fs.readFile(filePath, 'utf8', (err, data) => {
     if (err) {
       return res.status(500).json({ error: 'Failed to load questions.' });
     }
-    res.json(JSON.parse(data));
+    try {
+      res.json(JSON.parse(data));
+    } catch (e) {
+      res.status(500).json({ error: 'Failed to parse questions.' });
+    }
   });
 });
 
@@ -32,7 +37,11 @@ app.get('/api/questions/:category', (req, res) => {
   else return res.status(400).json({ error: 'Unknown category' });
   fs.readFile(path.join(__dirname, file), 'utf8', (err, data) => {
     if (err) return res.status(500).json({ error: 'Failed to load questions.' });
-    res.json(JSON.parse(data));
+    try {
+      res.json(JSON.parse(data));
+    } catch (e) {
+      res.status(500).json({ error: 'Failed to parse questions.' });
+    }
   });
 });
 
