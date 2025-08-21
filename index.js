@@ -1,56 +1,96 @@
-let questionsArray = [];
-let currentIndex = 0;
-let chosenIndices = new Set();
+document.addEventListener('DOMContentLoaded', () => {
+  const landingPage = document.getElementById('landing-page');
+  const cardContainer = document.getElementById('card-container');
+  const questionCard = document.getElementById('question-card');
+  const imageEl = document.getElementById('card-image');
+  const questionEl = document.getElementById('card-question');
+  const nextBtn = document.getElementById('next-btn');
+  const reserveBtn = document.getElementById('reserve-btn');
+  const startOverBtn = document.getElementById('start-over-btn');
+  const gameOver = document.getElementById('game-over');
+  const backBtn = document.getElementById('back-btn');
+  const cardNumberInput = document.getElementById('card-number-input');
+  const serialBadge = document.getElementById('serial-badge');
 
-const imageEl = document.getElementById('card-image');
-const questionEl = document.getElementById('card-question');
-const nextBtn = document.getElementById('next-btn');
-const cardEl = document.getElementById('question-card');
+  let questions = [];
+  let currentIndex = 0;
+  let reservedIndices = new Set();
 
-function getNextUnchosenIndex(startIdx) {
-  for (let i = 0; i < questionsArray.length; i++) {
-    const idx = (startIdx + i) % questionsArray.length;
-    if (!chosenIndices.has(idx)) {
-      return idx;
+  function showLanding() {
+    landingPage.style.display = 'block';
+    cardContainer.style.display = 'none';
+  }
+
+  function showGame() {
+    landingPage.style.display = 'none';
+    cardContainer.style.display = 'block';
+  }
+
+  function renderCard(index) {
+    const q = questions[index];
+    if (!q) return;
+    imageEl.src = q.imageUrl || '';
+    questionEl.textContent = q.question || '';
+    serialBadge.textContent = q.serialNumber ? `#${q.serialNumber}` : '';
+  }
+
+  function showNext() {
+    // find next non-reserved
+    let next = currentIndex + 1;
+    while (next < questions.length && reservedIndices.has(next)) next++;
+    if (next >= questions.length) {
+      gameOver.style.display = 'block';
+      questionCard.style.display = 'none';
+      return;
     }
+    currentIndex = next;
+    renderCard(currentIndex);
   }
-  return -1; // All chosen
-}
 
-function renderCard(index) {
-  if (index === -1) {
-    cardEl.style.display = 'none';
-    nextBtn.style.display = 'none';
-    // Show a message when all questions are chosen
-    const doneMsg = document.createElement('div');
-    doneMsg.className = 'question';
-    doneMsg.textContent = 'All questions have been shown!';
-    document.body.appendChild(doneMsg);
-    return;
-  }
-  const item = questionsArray[index];
-  imageEl.src = item.imageUrl;
-  imageEl.alt = `Image for question ${index + 1}`;
-  questionEl.textContent = item.question;
-  // Mark as chosen
-  chosenIndices.add(index);
-}
+  // category selection
+  document.querySelectorAll('.category-card').forEach(card => {
+    const img = card.dataset.image;
+    const bg = document.createElement('div');
+    bg.className = 'category-card-bg';
+    bg.style.backgroundImage = `url(${img})`;
+    card.appendChild(bg);
+    card.addEventListener('click', async () => {
+      const category = card.dataset.category;
+      let url = '/api/questions';
+      if (category === 'random') url = '/api/questions_random';
+      else if (category && category !== 'spill_the_truth') url = `/api/questions/${category}`;
+      const res = await fetch(url);
+      questions = await res.json();
+      currentIndex = 0;
+      reservedIndices.clear();
+      gameOver.style.display = 'none';
+      questionCard.style.display = 'flex';
+      showGame();
+      renderCard(currentIndex);
+    });
+  });
 
-nextBtn.addEventListener('click', () => {
-  const nextIdx = getNextUnchosenIndex(currentIndex + 1);
-  currentIndex = nextIdx;
-  renderCard(currentIndex);
+  nextBtn.addEventListener('click', showNext);
+  reserveBtn.addEventListener('click', () => {
+    reservedIndices.add(currentIndex);
+    showNext();
+  });
+  startOverBtn?.addEventListener('click', () => {
+    showLanding();
+  });
+  backBtn?.addEventListener('click', () => {
+    showLanding();
+  });
+  cardNumberInput?.addEventListener('change', () => {
+    const val = Number(cardNumberInput.value);
+    if (!Number.isInteger(val) || val < 1 || val > questions.length) return;
+    const idx = val - 1;
+    currentIndex = idx;
+    renderCard(currentIndex);
+  });
+
+  // default state
+  showLanding();
 });
 
-// Fetch questions from API and initialize
-fetch('/api/questions')
-  .then(res => res.json())
-  .then(data => {
-    questionsArray = data;
-    currentIndex = getNextUnchosenIndex(0);
-    renderCard(currentIndex);
-  })
-  .catch(() => {
-    questionEl.textContent = 'Failed to load questions.';
-    nextBtn.style.display = 'none';
-  });
+

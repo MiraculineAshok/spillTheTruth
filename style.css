@@ -7,7 +7,7 @@ body {
   margin: 0;
 }
 .card {
-  background: #fff;
+  background: #ffffff;
   border-radius: 16px;
   box-shadow: 0 4px 24px rgba(0,0,0,0.08);
   padding: 32px 24px 24px 24px;
@@ -21,26 +21,238 @@ body {
   width: 100%;
   border-radius: 12px;
   margin-bottom: 20px;
-  object-fit: cover;
-  max-height: 200px;
+  /* object-fit: cover; */
+  max-height: 350px;
 }
 .card .question {
   font-size: 1.2rem;
   font-weight: 500;
   margin-bottom: 24px;
   text-align: center;
+  font-family: "PT Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 25px;
 }
-.card button {
+button {
   display: block;
   padding: 10px 24px;
   border: none;
   border-radius: 8px;
-  background: #007bff;
-  color: #fff;
+  border: 1px solid;
   font-size: 1rem;
   cursor: pointer;
+  background: #ffffff;
   transition: background 0.2s;
 }
 .card button:hover {
-  background: #0056b3;
+  background: black;
+  color: white;
+  font-family: "PT Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+.card-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin-top: 8px;
+  align-items: center;
+}
+
+.card button {
+  width: 100%;
+  margin: 0;
+}
+#landing-page {
+  max-width: 900px;
+  width: 100%;
+  padding: 16px;
+}
+#landing-page h2 {
+  text-align: center;
+  font-family: "PT Sans", sans-serif;
+}
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+.category-card {
+  position: relative;
+  height: 250px;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+.category-card-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.85);
+}
+.category-card-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  text-align: center;
+  padding: 8px 10px;
+  font-family: "PT Sans", sans-serif;
+}
+.category-card:hover .category-card-bg {
+  filter: brightness(0.7);
+}
+.category-card.disabled {
+  pointer-events: none;
+}
+.category-card.disabled::after {
+  content: 'Coming Soon';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  font-family: "PT Sans", sans-serif;
+  font-size: 18px;
+}
+#card-container {
+  position: relative;
+}
+.icon-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(0,0,0,0.15);
+  background: #ffffff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+  text-align: center;
+}
+.icon-btn:hover {
+  background: black;
+  color: white;
+}
+#start-over-btn {
+  border: 1px solid;
+  background: #ffffff;
+}
+#start-over-btn:hover {
+  background: black;
+  color: white;
+}
+#game-over {
+  margin-top: 16px;
+  max-width: 350px;
+}
+.game-over-text {
+  text-align: center;
+  font-family: "PT Sans", sans-serif;
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+.serial-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(0,0,0,0.05);
+  color: #666;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-family: "PT Sans", sans-serif;
+  font-size: 20px;
+}
+#question-card {
+  position: relative;
+}
+#card-number-input {
+  width: 94%;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.2);
+  outline: none;
+}
+#card-number-input:focus {
+  border-color: #000;
+}
+.card-top-controls {
+  max-width: 100%;
+  width: 100%;
+  margin: 0 auto 8px auto;
+  box-sizing: border-box;
+}
+.card-top-controls input[type="number"] {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.2);
+  outline: none;
+}
+.card-top-controls input[type="number"]:focus {
+  border-color: #000;
+}
+.popover-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+.popover-card {
+  background: #fff;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 360px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+.popover-body {
+  padding: 16px;
+}
+.popover-title {
+  font-family: "PT Sans", sans-serif;
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+.popover-message {
+  font-family: "PT Sans", sans-serif;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+.popover-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.popover-actions button {
+  border: 1px solid;
+  background: #ffffff;
+  padding: 8px 14px;
+  border-radius: 8px;
+}
+.popover-actions button:hover {
+  background: black;
+  color: white;
+}
+.css{
+  background-attachment: fixed;
 }

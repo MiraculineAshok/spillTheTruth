@@ -5,13 +5,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Question Card</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Edu+SA+Hand:wght@400..700&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="card" id="question-card">
-    <img id="card-image" src="" alt="Question Image">
-    <div class="question" id="card-question"></div>
+  <div id="landing-page">
+    <h2>Choose a Category</h2>
+    <div class="categories-grid">
+      <div class="category-card" data-category="spill_the_truth" data-image="https://m.media-amazon.com/images/I/416Qth0i7tL.jpg_BO30,255,255,255_UF900,850_SR1910,1000,0,C_PIRIOFOUR-medium,BottomLeft,30,-20_ZA29,500,900,420,420,AmazonEmber,50,4,0,0_QL100_.jpg">
+        <div class="category-card-bg"></div>
+        <div class="category-card-label">Spill the Truth</div>
+      </div>
+      <div class="category-card disabled" data-category="memory_lane" data-image="https://m.media-amazon.com/images/I/813WIim8reL.jpg">
+        <div class="category-card-bg"></div>
+        <div class="category-card-label">Memory Lane</div>
+      </div>
+      <div class="category-card disabled" data-category="fun_facts" data-image="https://factornotes.com/cdn/shop/files/1_cc5f3679-2236-4d53-a618-5d5751ba0d1f_1200x1200.jpg?v=1697545600">
+        <div class="category-card-bg"></div>
+        <div class="category-card-label">Fun Facts</div>
+      </div>
+      <div class="category-card disabled" data-category="random" data-image="https://factornotes.com/cdn/shop/files/IMG_7905_1024x1024.jpg?v=1734260728">
+        <div class="category-card-bg"></div>
+        <div class="category-card-label">Random from All</div>
+      </div>
+    </div>
   </div>
-  <button id="next-btn">Next</button>
+  <div id="card-container" style="display:none;">
+    <button id="back-btn" class="icon-btn" title="Back to categories">✕</button>
+    <div class="card-top-controls">
+      <input id="card-number-input" type="number" min="1" placeholder="Choose the card number" />
+    </div>
+    <div class="card" id="question-card">
+      <div id="serial-badge" class="serial-badge"></div>
+      <img id="card-image" src="" alt="Question Image">
+      <div class="question" id="card-question"></div>
+      <div class="card-buttons">
+        <button id="next-btn">Next</button>
+        <button id="reserve-btn">Reserve for other person</button>
+      </div>
+    </div>
+    <div id="game-over" style="display:none;">
+      <div class="game-over-text">Game over! Thanks for playing.</div>
+      <div class="card-buttons">
+        <button id="start-over-btn">Start Over</button>
+      </div>
+    </div>
+  </div>
   <script src="index.js"></script>
+  <!-- include popover template -->
+  <div id="popover-root"></div>
+  <script>
+    fetch('popover.html').then(r => r.text()).then(html => {
+      document.getElementById('popover-root').innerHTML = html;
+    });
+  </script>
 </body>
 </html>
+
+

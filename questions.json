@@ -1,14 +1,22 @@
 [
   {
-    "imageUrl": "https://example.com/image1.jpg",
-    "question": "What is your favorite color?"
+    "serialNumber": 1,
+    "imageUrl": "images/image1.png",
+    "question": "Have you ever tried hopping on a trend that you considered cringe at first?"
   },
   {
-    "imageUrl": "https://example.com/image2.jpg",
-    "question": "Do you like coffee or tea?"
+    "serialNumber": 2,
+    "imageUrl": "images/image3.png",
+    "question": "Confess your most embarrassing public transportation moment."
   },
   {
-    "imageUrl": "https://example.com/image3.jpg",
-    "question": "Have you ever traveled abroad?"
+    "serialNumber": 3,
+    "imageUrl": "images/image4.png",
+    "question": "What's the worst thing you've ever done to a friend?"
+  },
+  {
+    "serialNumber": 4,
+    "imageUrl": "images/image5.png",
+    "question": "What's something you still feel guilty about?"
   }
 ]
