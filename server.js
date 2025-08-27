@@ -45,9 +45,9 @@ app.get('/api/questions/:category', (req, res) => {
   });
 });
 
-// API endpoint to get random questions from all categories
+// API endpoint to get random questions from select categories (exclude memory lane)
 app.get('/api/questions_random', (req, res) => {
-  const files = ['questions_spill_the_truth.json', 'questions_memory_lane.json', 'questions_fun_facts.json'];
+  const files = ['questions_spill_the_truth.json', 'questions_fun_facts.json'];
   let allQuestions = [];
   let readCount = 0;
   files.forEach(file => {

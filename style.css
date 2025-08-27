@@ -6,6 +6,16 @@ body {
   justify-content: center;
   margin: 0;
 }
+:root {
+  --card-height: 570px;
+  --card-padding-top: 32px;
+  --card-padding-bottom: 24px;
+  --question-height: 170px;
+  --image-gap: 20px; /* space below image */
+  --question-gap: 24px; /* space below question */
+  --buttons-block: 96px; /* approximate space reserved for buttons */
+}
+
 .card {
   background: #ffffff;
   border-radius: 16px;
@@ -16,23 +26,28 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: var(--card-height);
 }
+
 .card img {
   width: 100%;
+  height: calc(var(--card-height) - var(--card-padding-top) - var(--card-padding-bottom) - var(--question-height) - var(--image-gap) - var(--question-gap) - var(--buttons-block));
   border-radius: 12px;
-  margin-bottom: 20px;
+  margin-bottom: var(--image-gap);
   /* object-fit: cover; */
-  max-height: 350px;
 }
+
 .card .question {
   font-size: 1.2rem;
   font-weight: 500;
-  margin-bottom: 24px;
+  margin-bottom: var(--question-gap);
   text-align: center;
   font-family: "PT Sans", sans-serif;
   font-weight: 400;
   font-style: normal;
   font-size: 25px;
+  height: var(--question-height);
+  overflow-y: auto;
 }
 button {
   display: block;
@@ -59,6 +74,7 @@ button {
   width: 100%;
   margin-top: 8px;
   align-items: center;
+  min-height: var(--buttons-block);
 }
 
 .card button {
@@ -255,4 +271,22 @@ button {
 }
 .css{
   background-attachment: fixed;
+}
+/* Abstract background for text-only cards */
+.card.no-image {
+  background: radial-gradient(circle at 20% 20%, #fbe9e7, transparent 60%),
+              radial-gradient(circle at 80% 0%, #e8eaf6, transparent 50%),
+              radial-gradient(circle at 0% 100%, #e0f7fa, transparent 50%),
+              radial-gradient(circle at 100% 100%, #fff9c4, transparent 50%),
+              linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+}
+.card.no-image img { display: none; }
+.card.no-image .question {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(var(--card-height) - var(--card-padding-top) - var(--card-padding-bottom) - var(--buttons-block));
+  margin-bottom: 0;
+  -webkit-line-clamp: initial;
+  overflow: hidden;
 }
