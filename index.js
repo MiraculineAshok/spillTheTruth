@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const cardNumberInput = document.getElementById('card-number-input');
   const serialBadge = document.getElementById('serial-badge');
   const cardTopControls = document.querySelector('.card-top-controls');
+  const randomPrompt = document.getElementById('random-prompt');
+  const randomCountInput = document.getElementById('random-count-input');
+  const randomCountError = document.getElementById('random-count-error');
+  const randomStartBtn = document.getElementById('random-start-btn');
 
   let questions = [];
   let currentIndex = 0;
@@ -20,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const answeredGlobal = new Set(); // track across categories for Random
 
   function questionKey(q) {
-    return `${q.serialNumber ?? ''}|${q.question ?? ''}`;
+    return (q.question ?? '').trim();
   }
 
   // Background presets for text-only cards
@@ -82,6 +86,10 @@ document.addEventListener('DOMContentLoaded', () => {
     gameOver.style.display = 'none';
     questionCard.style.display = 'none';
     cardTopControls.style.display = 'none';
+    // Hide random prompt and clear state
+    if (randomPrompt) randomPrompt.style.display = 'none';
+    if (randomCountError) randomCountError.style.display = 'none';
+    if (randomCountInput) randomCountInput.value = '';
   }
 
   function showGame() {
@@ -179,6 +187,14 @@ document.addEventListener('DOMContentLoaded', () => {
     return questions.length > 0 && answeredIndices.size > 0 && answeredIndices.size < questions.length;
   }
 
+  function shuffleInPlace(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
   // category selection
   document.querySelectorAll('.category-card').forEach(card => {
     if (card.classList.contains('disabled')) return;
@@ -191,38 +207,62 @@ document.addEventListener('DOMContentLoaded', () => {
     
     card.addEventListener('click', async () => {
       const category = card.dataset.category;
+      // Random flow: show prompt, then build deck client-side
+      if (category === 'random') {
+        // Fetch combined deck from server (already excludes memory lane)
+        try {
+          const res = await fetch('/api/questions_random');
+          let loaded = await res.json();
+          // Filter out globally answered
+          loaded = loaded.filter(q => !answeredGlobal.has(questionKey(q)));
+          // Show prompt
+          randomPrompt.style.display = 'flex';
+          randomCountError.style.display = 'none';
+          randomCountInput.value = '';
+          randomStartBtn.onclick = () => {
+            const count = Number(randomCountInput.value);
+            const total = loaded.length;
+            if (!Number.isInteger(count) || count < 1 || count > total) {
+              randomCountError.textContent = `Please enter a valid number below ${total}.`;
+              randomCountError.style.display = 'block';
+              return;
+            }
+            randomCountError.style.display = 'none';
+            randomPrompt.style.display = 'none';
+            // Shuffle and take first N, then assign new serial numbers (1..N)
+            const subset = shuffleInPlace(loaded.slice()).slice(0, count)
+              .map((q, idx) => ({ ...q, serialNumber: idx + 1 }));
+            questions = subset;
+            currentIndex = 0;
+            answeredIndices.clear();
+            reservedIndices.clear();
+            showGame();
+            // Per-card background and image toggle will happen in render
+            renderCard(currentIndex);
+          };
+        } catch (e) {
+          openInfoPopover('Failed to load questions. Please try again.');
+        }
+        return;
+      }
+
       let url;
-      if (category === 'random') url = '/api/questions_random';
-      else if (category === 'spill_the_truth') url = '/api/questions/spill_the_truth';
+      if (category === 'spill_the_truth') url = '/api/questions/spill_the_truth';
       else url = `/api/questions/${category}`;
       
       try {
         const res = await fetch(url);
         let loaded = await res.json();
-        // In Random, filter out globally answered questions
-        if (category === 'random') {
-          loaded = loaded.filter(q => !answeredGlobal.has(questionKey(q)));
-          if (loaded.length === 0) {
-            // No new questions left
-            landingPage.style.display = 'none';
-            cardContainer.style.display = 'block';
-            questionCard.style.display = 'none';
-            cardTopControls.style.display = 'none';
-            gameOver.style.display = 'block';
-            return;
-          }
-        }
-        questions = loaded;
         currentIndex = 0;
         answeredIndices.clear();
         reservedIndices.clear();
         showGame();
-        // Toggle no-image mode for fun facts deck selection
         if (category === 'fun_facts') {
           questionCard.classList.add('no-image');
         } else {
           questionCard.classList.remove('no-image');
         }
+        questions = loaded;
         renderCard(currentIndex);
       } catch (error) {
         console.error('Failed to load questions:', error);

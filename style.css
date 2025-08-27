@@ -290,3 +290,28 @@ button {
   -webkit-line-clamp: initial;
   overflow: hidden;
 }
+.random-prompt {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column; /* stack elements so error appears below input */
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+.random-prompt input[type="number"] {
+  width: 200px;
+  padding: 6px 8px;
+  border: 1px solid rgba(0,0,0,0.2);
+  border-radius: 8px;
+}
+.random-prompt button {
+  border: 1px solid;
+  background: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+.error-note {
+  color: #d00;
+  font-size: 14px;
+  margin-top: 2px;
+}
